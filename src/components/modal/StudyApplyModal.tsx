@@ -9,6 +9,7 @@ import { TitleText } from "../../constants/fonts";
 import { colors } from "../../constants/colors";
 import React, { useEffect } from "react";
 import { useQueryClient } from "react-query";
+import { studyServiceKeys } from "../../hook/queries/study";
 
 type StudyApplyModalProps = {
   studyId: number;
@@ -66,9 +67,10 @@ const StudyApplyModal: React.FC<StudyApplyModalProps> = ({ studyId }) => {
     setOpen(false);
   };
 
+  const { data } = useGetStudyInfo();
   useEffect(() => {
     return () => {
-      queryClient.invalidateQueries(["getInfoStudyData"]);
+      queryClient.invalidateQueries(studyServiceKeys.useGetStudyInfo);
     };
   });
   return (
