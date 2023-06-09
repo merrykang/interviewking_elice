@@ -1,5 +1,7 @@
-import styled from "@emotion/styled";
+import styled from "styled-components";
 import { Link } from "@mui/material";
+import { TitleText } from "../../constants/fonts";
+import { colors } from "../../constants/colors";
 
 const Divider = styled.div`
   margin: 15px 0px;
@@ -13,9 +15,8 @@ const StyledContainer = styled.div`
 `;
 
 const StyledLogo = styled(Link)`
-  font-size: 30px;
-  font-weight: bold;
-  color: #00057d;
+  ${TitleText}
+  color: ${colors.main_navy}
 `;
 const StyledNavItemContainer = styled.div`
   margin-left: -200px;

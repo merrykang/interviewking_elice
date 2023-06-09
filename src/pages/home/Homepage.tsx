@@ -61,7 +61,7 @@ const HomePage = (): JSX.Element => {
           <StudyListItem
            id={study.id}
            title={study.title}
-           currentParticipants={study.currentParticipants}
+           // currentParticipants={study.currentParticipants}
            maxParticipants={study.maxParticipants}
            startDate={study.startDate}
            endDate={study.endDate}

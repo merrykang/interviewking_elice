@@ -1,6 +1,8 @@
 import React, { ChangeEvent, useState } from 'react';
-import styled from "@emotion/styled";
-import { Button } from "@mui/material";
+import styled from "styled-components";
+import { colors } from '../../constants/colors';
+import { TitleText } from '../../constants/fonts';
+import Button from "@mui/material/Button";
 import axios from 'axios';
 
 const SignupPage = () => {
@@ -115,65 +117,76 @@ const SignupPage = () => {
   };
 
   return (
-    <StyledLoginContainer>
-      <StyledLoginTitleContainer>
-        <StyledLoginText>면접을 면접답게</StyledLoginText>
-        <StyledLoginText>면접왕</StyledLoginText>
-        <StyledLoginText>면접왕에서 스터디 찾고, 동료들과 함께 자신있는 면접을 준비하세요</StyledLoginText>
-      </StyledLoginTitleContainer>
-      <StyledSignupContainer onSubmit={onClickSubmit}>
-        <StyledSignupInput
-          type="text"
-          placeholder="이름"
-          value={name}
-          onChange={onChangeName}
-        />
-        <StyledSignupInput
-          type="tel"
-          placeholder="전화번호"
-          value={phone}
-          onChange={onChangePhone}
-        />
-        <StyledSignupInput
-          type="email"
-          placeholder="이메일"
-          value={email}
-          onChange={onChangeEmail}
-        />
-        <StyledSignupInput
-          type="password"
-          placeholder="비밀번호"
-          value={password}
-          onChange={onChangePassword}
-        />
-        <StyledSignupInput
-          type="password"
-          placeholder="비밀번호 확인"
-          value={confirmPassword}
-          onChange={onChangePasswordConfirm}
-        />
-        <StyledSignupBtn variant="contained" color="primary" type="submit">
-          가입하기
-        </StyledSignupBtn>
+    <StyledSignupWrapper>
+      <StyledSignupContainer>
+        <StyledSignupTitleContainer>
+          <StyledSignupText>면접을 면접답게</StyledSignupText>
+          <StyledSignupText>면접왕</StyledSignupText>
+          <StyledSignupText>면접왕에서 스터디 찾고, 동료들과 함께 자신있는 면접을 준비하세요</StyledSignupText>
+        </StyledSignupTitleContainer>
+        <StyledSignupInputContainer onSubmit={onClickSubmit}>
+          <StyledSignupInput
+            type="text"
+            placeholder="이름"
+            value={name}
+            onChange={onChangeName}
+          />
+          <StyledSignupInput
+            type="tel"
+            placeholder="전화번호"
+            value={phone}
+            onChange={onChangePhone}
+          />
+          <StyledSignupInput
+            type="email"
+            placeholder="이메일"
+            value={email}
+            onChange={onChangeEmail}
+          />
+          <StyledSignupInput
+            type="password"
+            placeholder="비밀번호"
+            value={password}
+            onChange={onChangePassword}
+          />
+          <StyledSignupInput
+            type="password"
+            placeholder="비밀번호 확인"
+            value={confirmPassword}
+            onChange={onChangePasswordConfirm}
+          />
+          <StyledSignupBtn variant="contained" color="primary" type="submit">
+            가입하기
+          </StyledSignupBtn>
+        </StyledSignupInputContainer>
       </StyledSignupContainer>
-    </StyledLoginContainer>
+      <StyledSignupCopyright>
+        Copyright © 2023 INTERVIEWKING All Rights Reserved.
+      </StyledSignupCopyright>
+    </StyledSignupWrapper>
   );
 };
 
-const StyledLoginContainer = styled.div`
-    background-color: #f1f4ff;
+const StyledSignupWrapper = styled.div`
+  background-color: #f1f4ff;
+  padding-bottom: 30px;
+`;
+
+const StyledSignupContainer = styled.div`
     height: 100vh;
     display: flex;
     justify-content: center;
     align-items: center;
-  `
-const StyledLoginTitleContainer = styled.div`
+`;
+const StyledSignupTitleContainer = styled.div`
     display: flex;
     flex-direction: column;
     
-  `
-const StyledLoginText = styled.div`
-    color: #00057D; 
+`;
+const StyledSignupText = styled.div`
+    height: fit-content;
+    ${TitleText}
+    color: ${colors.main_navy};
     font-size: 64px; 
     font-weight:400;
 
@@ -183,13 +196,14 @@ const StyledLoginText = styled.div`
     }
 
     &:nth-of-type(3) {
+      font-family: none;
       color: #8689A3;
       font-size: 18px;
       font-weight:300;
       margin-top: 50px;
     }
   `
-const StyledSignupContainer = styled.form`
+const StyledSignupInputContainer = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -220,19 +234,27 @@ const StyledSignupInput = styled.input`
 `;
 
 const StyledSignupBtn = styled(Button)`
-  width: 132px;
-  height: 45px;
-  border-radius: 10px;
-  background-color: #2E3057;
-  color: #ffffff;
-  font-weight: 600;
-  font-size: 18px;
-  border: 1px solid #2E3057;
-  margin-top: 40px;
-  margin-left: auto;
-  &:hover {
+  && {
+    width: 132px;
+    height: 45px;
+    border-radius: 10px;
     background-color: #2E3057;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 18px;
+    border: 1px solid #2E3057;
+    margin-top: 40px;
+    margin-left: auto;
+    &:hover {
+      background-color: #2E3057;
+    }
   }
+  
 `;
 
+const StyledSignupCopyright = styled.div`
+  text-align: center;
+  font-size: 14px;
+  color: #C0C3E5;
+`
 export default SignupPage;

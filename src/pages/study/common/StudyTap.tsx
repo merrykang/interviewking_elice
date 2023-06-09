@@ -1,9 +1,11 @@
-import styled from "@emotion/styled";
+import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 
 import CreateIcon from "@mui/icons-material/Create";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import { useState } from "react";
+import { colors } from "../../../constants/colors";
+import { TitleText } from "../../../constants/fonts";
 
 export const StudyTaps = () => {
   const navigate = useNavigate();
@@ -41,8 +43,26 @@ const StydyTapText = styled.button`
   &:not(:first-child) {
     margin-left: 30px;
   }
+  color: ${colors.main_mint};
+  &:hover {
+    color: skyblue; /* 호버 시 변경할 색상 */
+  }
+`;
 
-  color: #9fefd3; /* 적절한 색상으로 변경 */
+const StydyTapTextS = styled.p`
+  cursor: pointer;
+  display: flex;
+  font-size: 20px;
+  font-weight: 800;
+  border: none;
+  background: none;
+  ${TitleText}
+  font-family: "TitleText";
+  &:not(:first-child) {
+    margin-left: 30px;
+  }
+
+  color: ${colors.main_mint};
   &:hover {
     color: #00e595; /* 호버 시 변경할 색상 */
   }

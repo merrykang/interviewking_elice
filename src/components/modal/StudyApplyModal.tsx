@@ -7,7 +7,6 @@ import StudyApplyList from "./StudyApplyList";
 import { Link } from "react-router-dom";
 import { dateFomatting } from "../../utils/dateFomatting";
 import { TitleText } from "../../constants/fonts";
-import { getStudyData } from "../../api/api-study";
 import { colors } from "../../constants/colors";
 
 type StudyApplyModalProps = {

@@ -1,74 +1,36 @@
-import React from "react";
 import styled from "styled-components";
 import { Link } from "@mui/material";
+import React from 'react';
 import StudyListItem from "../../components/layout/StudyListItem";
 
 import { colors } from "../../constants/colors";
 import * as fonts from "../../constants/fonts";
 import PencilIconSrc from "../../img/pencil_mint.svg";
+import { getInfoAllStudyData } from "../../api/api-study";
 
 const StudyList = (): JSX.Element => {
-  const studyData = [{
-      id: 1,
-      title: "면접 스터디 1",
-      currentParticipants: 3,
-      maxParticipants: 8,
-      startDate: "23.07.01",
-      endDate: "23.07.31",
-      recruitDeadline: "23.06.30",
-      master: "정채진"
-    },
-    {
-      id: 2,
-      title: "면접 스터디 2",
-      currentParticipants: 3,
-      maxParticipants: 8,
-      startDate: "23.07.01",
-      endDate: "23.07.31",
-      recruitDeadline: "23.06.30",
-      master: "정채진"
-    },
-    {
-      id: 3,
-      title: "면접 스터디 3",
-      currentParticipants: 3,
-      maxParticipants: 8,
-      startDate: "23.07.01",
-      endDate: "23.07.31",
-      recruitDeadline: "23.06.30",
-      master: "정채진"
-    },
-    {
-      id: 4,
-      title: "면접 스터디 4",
-      currentParticipants: 3,
-      maxParticipants: 8,
-      startDate: "23.07.01",
-      endDate: "23.07.31",
-      recruitDeadline: "23.06.30",
-      master: "정채진"
-    },
-    {
-      id: 5,
-      title: "면접 스터디 5",
-      currentParticipants: 3,
-      maxParticipants: 8,
-      startDate: "23.07.01",
-      endDate: "23.07.31",
-      recruitDeadline: "23.06.30",
-      master: "정채진"
-    },
-    {
-      id: 6,
-      title: "면접 스터디 6",
-      currentParticipants: 3,
-      maxParticipants: 8,
-      startDate: "23.07.01",
-      endDate: "23.07.31",
-      recruitDeadline: "23.06.30",
-      master: "정채진"
-    }
-  ];
+  type StudyData = {
+    id: number,
+    title: string,
+    headcount: number,
+    start: string,
+    end: string,
+    deadline: string,
+    master: string
+  }
+
+  const [studyData, setStudyData] = React.useState<StudyData[]>([]);
+
+  React.useEffect(() => {
+    getInfoAllStudyData()
+      .then((response) => {
+        console.log(response.data);
+        setStudyData(response.data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, []);
 
   return (
       <CommonContainer>
@@ -95,18 +57,18 @@ const StudyList = (): JSX.Element => {
           </StudyListTopArea>
 
           <StudyListItemArea>
-          {studyData.map((study) => (
+          {studyData.map((study,index) => (
               <StudyListItem
+               key={index}
                id={study.id}
                title={study.title}
-               currentParticipants={study.currentParticipants}
-               maxParticipants={study.maxParticipants}
-               startDate={study.startDate}
-               endDate={study.endDate}
-               recruitDeadline={study.recruitDeadline}
+               // currentParticipants={study.currentParticipants}
+               maxParticipants={study.headcount}
+               startDate={study.start}
+               endDate={study.end}
+               recruitDeadline={study.deadline}
                master={study.master}
                />
-
           ))}
           </StudyListItemArea>
             
@@ -161,7 +123,7 @@ const ButtonText = styled.p`
   border-radius: 10px;
 `;
 
-const StudyListItemArea = styled.p`
+const StudyListItemArea = styled.div`
   width: 1270px;
   height: 945px;
   margin: 30px 0 40PX 0;
@@ -202,3 +164,7 @@ const StyledIcon = styled.img`
   width: 27px;
   height: 27px;
 `
+
+function useEffect(arg0: () => void, arg1: never[]) {
+  throw new Error("Function not implemented.");
+}

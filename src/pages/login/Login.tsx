@@ -1,8 +1,10 @@
-import React, { ChangeEvent, useState } from 'react';
-import styled from "@emotion/styled";
-import { Button } from "@mui/material";
+import React, { ChangeEvent, useState, useEffect } from 'react';
+import styled from "styled-components";
+import { colors } from "../../constants/colors";
+import Button from "@mui/material/Button";
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { TitleText } from '../../constants/fonts';
 
 const LoginPage = () => {
   const [email, setEmail] = useState('');
@@ -59,74 +61,106 @@ const LoginPage = () => {
     navigate('./signup'); // useNavigate 사용하여 페이지 이동
   };
 
+  useEffect(() => {
+    fetchData()
+      .then((data) => {
+        console.log(data);
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  }, []);
+
+  const fetchData = () => {
+    return axios
+      .get("http://34.22.79.51:5000/api/community/list")
+      .then((response) => response.data);
+  };
+
   return (
-    <StyledLoginContainer>
-      <StyledLoginTitleContainer>
-        <StyledLoginText>면접을 면접답게</StyledLoginText>
-        <StyledLoginText>면접왕</StyledLoginText>
-        <StyledLoginText>면접왕에서 스터디 찾고, 동료들과 함께 자신있는 면접을 준비하세요</StyledLoginText>
-      </StyledLoginTitleContainer>
-      <StyledSignupContainer onSubmit={onClickSubmit}>
-        <StyledSignupInput
-          type="email"
-          placeholder="이메일"
-          value={email}
-          onChange={onChangeEmail}
-        />
-        <StyledSignupInput
-          type="password"
-          placeholder="비밀번호"
-          value={password}
-          onChange={onChangePassword}
-        />
-        <StyledBtnWrapper>
-          <StyledSignupBtn variant="contained" color="primary" type="button" onClick={onClickSignup}>
-            회원가입
-          </StyledSignupBtn>
-          <StyledLoginBtn variant="contained" color="primary" type="submit">
-            로그인
-          </StyledLoginBtn>
-        </StyledBtnWrapper>
-      </StyledSignupContainer>
-    </StyledLoginContainer>
+    <StyledCommonContainer>
+      <StyledLoginWrapper>
+        <StyledLoginContainer>
+          <StyledLoginTitleContainer>
+            <StyledLoginText>면접을 면접답게</StyledLoginText>
+            <StyledLoginText>면접왕</StyledLoginText>
+            <StyledLoginText>면접왕에서 스터디 찾고, 동료들과 함께 자신있는 면접을 준비하세요</StyledLoginText>
+          </StyledLoginTitleContainer>
+          <StyledSignupContainer onSubmit={onClickSubmit}>
+            <StyledSignupInput
+              type="email"
+              placeholder="이메일"
+              value={email}
+              onChange={onChangeEmail}
+            />
+            <StyledSignupInput
+              type="password"
+              placeholder="비밀번호"
+              value={password}
+              onChange={onChangePassword}
+            />
+            <StyledBtnWrapper>
+              <StyledSignupBtn variant="contained" color="primary" type="button" onClick={onClickSignup}>
+                회원가입
+              </StyledSignupBtn>
+              <StyledLoginBtn variant="contained" color="primary" type="submit">
+                로그인
+              </StyledLoginBtn>
+            </StyledBtnWrapper>
+          </StyledSignupContainer>
+        </StyledLoginContainer>
+        <StyledSignupCopyright>
+          Copyright © 2023 INTERVIEWKING All Rights Reserved.
+        </StyledSignupCopyright>
+      </StyledLoginWrapper>
+    </StyledCommonContainer>
   );
 };
 
+
+const StyledCommonContainer = styled.div`
+  background-color: #f1f4ff;
+`;
+const StyledLoginWrapper = styled.div`
+  width: 1270px;
+  margin: 0 auto;
+  padding-bottom: 30px;
+`;
 const StyledLoginContainer = styled.div`
-    background-color: #f1f4ff;
-    align-items: center;
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  `
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
 const StyledLoginTitleContainer = styled.div`
-    display: flex;
-    flex-direction: column;
-    
-  `
+  display: flex;
+  flex-direction: column;
+`;
 const StyledLoginText = styled.div`
-    color: #00057D; 
-    font-size: 64px; 
-    font-weight:400;
+  height: fit-content;
+  ${TitleText}
+  color: ${colors.main_navy};
+  font-size: 64px; 
+  font-weight:400;
+  
+  &:nth-of-type(2) {
+    color: ${colors.main_mint};
+    margin-top: 20px;
+  }
 
-    &:nth-of-type(2) {
-      color: #00E595;
-      margin-top: 20px;
-    }
-
-    &:nth-of-type(3) {
-      color: #8689A3;
-      font-size: 18px;
-      font-weight:300;
-      margin-top: 50px;
-    }
-  `
+  &:nth-of-type(3) {
+    font-family: none;
+    color: #8689A3;
+    font-size: 18px;
+    font-weight:300;
+    margin-top: 50px;
+  }
+`;
 const StyledSignupContainer = styled.form`
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-left: 340px;
+  margin-left: 330px;
 `;
 
 const StyledSignupInput = styled.input`
@@ -157,32 +191,41 @@ const StyledBtnWrapper = styled.div`
   margin-left: auto;
 `
 const StyledSignupBtn = styled(Button)`
-  width: 132px;
-  height: 45px;
-  border-radius: 10px;
-  font-weight: 600;
-  font-size: 18px;
-  background-color: #00E595;
-  color: #0E0E0E;
-  border: 1px solid #00E595;
-  &:hover {
+  &&{
+    width: 132px;
+    height: 45px;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 18px;
     background-color: #00E595;
+    color: #0E0E0E;
+    border: 1px solid #00E595;
+    &:hover {
+      background-color: #00E595;
+    }
   }
 `;
 const StyledLoginBtn = styled(Button)`
-  width: 132px;
-  height: 45px;
-  border-radius: 10px;
-  color: #ffffff;
-  font-weight: 600;
-  font-size: 18px;
-  background-color: #2E3057;
-  color: #ffffff;
-  border: 1px solid #2E3057;
-  margin-left: 40px;
-  &:hover {
+  && {
+    width: 132px;
+    height: 45px;
+    border-radius: 10px;
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 18px;
     background-color: #2E3057;
+    color: #ffffff;
+    border: 1px solid #2E3057;
+    margin-left: 40px;
+    &:hover {
+      background-color: #2E3057;
+    }
   }
+`;
+const StyledSignupCopyright = styled.div`
+  text-align: center;
+  font-size: 14px;
+  color: #C0C3E5;
 `;
 
 export default LoginPage;

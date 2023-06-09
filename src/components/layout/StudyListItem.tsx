@@ -8,7 +8,7 @@ import PeopleIconSrc from "../../img/people_navy.svg";
 type StudyListProps = {
   id: number,
   title: string,
-  currentParticipants: number,
+  // currentParticipants: number,
   maxParticipants: number,
   startDate: string,
   endDate: string,
@@ -19,7 +19,7 @@ type StudyListProps = {
 const StudyListItem: React.FC<StudyListProps> = ({
   id,
   title,
-  currentParticipants,
+  //currentParticipants,
   maxParticipants,
   startDate,
   endDate,
@@ -40,7 +40,7 @@ const StudyListItem: React.FC<StudyListProps> = ({
             <StyledStudyPeopleArea>
               <StyledIcon src={PeopleIconSrc} />
               <StyledStudyListPeopleText>
-                {currentParticipants} / {maxParticipants} 명
+                0 / {maxParticipants} 명
               </StyledStudyListPeopleText>
             </StyledStudyPeopleArea>
   

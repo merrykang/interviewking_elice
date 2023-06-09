@@ -14,6 +14,8 @@ import UserInfo from "./pages/mypage/components/UserInfo";
 import UserStudy from "./pages/mypage/components/UserStudy";
 import { Feedback } from "./pages/study/Feedback";
 import Information from "./pages/study/Information";
+import CommunityCreatePage from "./pages/community/CommunityCreatePage";
+import CommunityPage from "./pages/community/CommunityPage";
 
 const queryClient = new QueryClient();
 
@@ -37,6 +39,8 @@ function App() {
               <Route path="/study/info" element={<Information />} />
               {/* test 페이지 */}
               <Route path="/testpage" element={<TestPage />} />
+              <Route path="/Community/CommunityPage" element={<CommunityPage />} />
+              <Route path="/Community/CommunityCreatePage" element={<CommunityCreatePage />} />
             </Routes>
           </Layout>
         </QueryClientProvider>
