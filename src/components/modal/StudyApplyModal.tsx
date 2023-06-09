@@ -8,13 +8,21 @@ import { dateFomatting } from "../../utils/dateFomatting";
 import { TitleText } from "../../constants/fonts";
 import { colors } from "../../constants/colors";
 import React, { useEffect } from "react";
+import { useQueryClient } from "react-query";
 
 type StudyApplyModalProps = {
   studyId: number;
 };
 
 const StudyApplyModal: React.FC<StudyApplyModalProps> = ({ studyId }) => {
-  //console.log(getStudyData());
+  const queryClient = useQueryClient();
+  const { data: studyData, isLoading } = useQuery<any>(
+    ["getInfoStudyData"],
+    getInfoStudyData,
+    {
+      staleTime: Infinity,
+    }
+  );
 
   const studyData = {
     title: "SAFFY 면접 스터디",
@@ -58,6 +66,11 @@ const StudyApplyModal: React.FC<StudyApplyModalProps> = ({ studyId }) => {
     setOpen(false);
   };
 
+  useEffect(() => {
+    return () => {
+      queryClient.invalidateQueries(["getInfoStudyData"]);
+    };
+  });
   return (
     <div>
       <Button onClick={handleOpen}>Open modal</Button>

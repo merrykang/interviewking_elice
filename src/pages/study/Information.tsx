@@ -10,6 +10,7 @@ import { getInfoAllStudyData, getInfoStudyData } from "../../api/api-study";
 import { SubmitButton } from "./common/SubmitButton";
 import axios from "axios";
 import { dateSplice } from "../../utils/dateFomatting";
+import { useQuery } from "react-query";
 
 const data = {
   // 스터디 정보
@@ -33,26 +34,18 @@ const data = {
 };
 
 const Information: React.FC = () => {
-  const [studyData, setStudyData] = useState({
-    title: "",
-    study_name: "",
-    status: 0,
-    content: 0,
-    start: "",
-    end: "",
-    chat_link: "",
-  });
+  const { data: studyData, isLoading } = useQuery<any>(
+    ["getInfoStudyData"],
+    getInfoStudyData,
+    {
+      staleTime: Infinity,
+    }
+  );
 
-  useEffect(() => {
-    getInfoStudyData()
-      .then((response) => {
-        console.log(response.data);
-        setStudyData(response.data);
-      })
-      .catch((error) => {
-        console.error("Error:", error);
-      });
-  }, []);
+  if (isLoading) {
+    return null;
+  }
+
   return (
     <Container>
       <div>{}</div>
