@@ -5,6 +5,7 @@ import Button from "@mui/material/Button";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import LeftSignContainer from "../../components/auth/LeftSignContainer";
+import { postSignIn } from "../../api/api-user";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -21,20 +22,23 @@ const LoginPage = () => {
     }
 
     try {
-      const response = await axios.post(
-        "http://34.22.79.51:5000/api/user/login",
-        {
-          email,
-          password,
-        }
-      );
+      // const response = await axios.post(
+      //   "http://34.22.79.51:5000/api/user/login",
+      //   {
+      //     email,
+      //     password,
+      //   }
+      // );
 
-      if (response.data.resultCode === "200") {
-        console.log("로그인 성공");
-        navigate("/homepage"); // 로그인 성공 시 홈페이지로 이동
-      } else {
-        console.log("로그인 실패");
-      }
+      // if ((response.data.message = "로그인 성공")) {
+      //   console.log(response.data.data.token);
+      //   navigate("/homepage"); // 로그인 성공 시 홈페이지로 이동
+      // } else {
+      //   console.log("로그인 실패");
+      // }
+      postSignIn(email, password).then((response) => {
+        console.log(response.data);
+      });
     } catch (error) {
       setError("에러 발생: " + String(error));
     }
@@ -50,30 +54,6 @@ const LoginPage = () => {
   const onClickSignup = () => {
     navigate("./signup"); // useNavigate 사용하여 페이지 이동
   };
-
-  // useEffect(() => {
-  //   fetchData()
-  //     .then((data) => {
-  //       console.log(data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error:", error);
-  //     });
-  // }, []);
-
-  // const fetchData = () => {
-  //   const user_id = "6478073927182b326a1ced5c"; // 원하는 임의의 user_id 값
-  //   const user_password =
-  //     "$2b$10$pAm1KetUgiKxto4Hd8oUV.QqHXhKtBq9gAnPktMytb7lY4LmpGjly"; // "원하는_임의의_비밀번호" 부분을 원하는 비밀번호로 대체하세요.
-
-  //   return axios
-  //     .get(`http://34.22.79.51:5000/api/user/mypage/${user_id}`, {
-  //       headers: {
-  //         Authorization: `Bearer ${user_password}`,
-  //       },
-  //     })
-  //     .then((response) => response.data);
-  // };
 
   return (
     <StyledCommonContainer>

@@ -44,7 +44,7 @@ const Information: React.FC = () => {
   });
 
   useEffect(() => {
-    getInfoStudyData()
+    getInfoStudyData("6481c6cf73e7175d6c31e18d")
       .then((response) => {
         console.log(response.data);
         setStudyData(response.data);
