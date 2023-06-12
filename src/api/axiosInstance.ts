@@ -1,7 +1,12 @@
 import axios from "axios";
 
 export const axiosInstance = axios.create({
-  baseURL: "http://34.22.79.51:5000/api/",
+  baseURL:
+    // 개발 환경에서는 proxy를 태우고 그렇지 않은 배포환경에서는 http://34.22.79.51로 api를 요청하게 하는 코드
+    process.env.NODE_ENV === "development"
+      ? "/api/"
+      : "http://34.22.79.51:5000/api/",
+  withCredentials: true,
 });
 
 // axiosInstance.interceptors.request.use((config) => {

@@ -6,13 +6,13 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import LeftSignContainer from "../../components/auth/LeftSignContainer";
 import { storeTokenInCookie } from "../../components/auth/loginUtils";
-import { postSignIn } from "../../api/api-user";
+import { getUserData, postSignIn } from "../../api/api-user";
 import { useCookies } from "react-cookie";
 import { useMutation } from "react-query";
 
 const LoginPage = () => {
-  // const [email, setEmail] = useState("");
-  // const [password, setPassword] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [error, setError] = useState("");
   const [cookies, setCookie] = useCookies(["token"]);
@@ -24,8 +24,8 @@ const LoginPage = () => {
     },
     // 말그대로 성공하면 실행되는 함수입니다.
     // 글을 생성하는 post니까 성공했을 땐 여기서 queryClient.invalidates([{postListAPI의 키값}])같은 코드를 넣어주면 글쓰기가 성공했을 때 자동으로 업데이트되겠죠?
-    onSuccess: (data) => {
-      console.log(data);
+    onSuccess: async (data) => {
+      getUserData();
     },
   });
 
