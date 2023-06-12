@@ -1,3 +1,4 @@
+import { setCookie } from "cookies-utils";
 import { axiosInstance } from "./axiosInstance";
 // axios.defaults.withCredentials = true;
 
@@ -16,16 +17,32 @@ export const postSignUp = async (
     password,
     passwordCheck,
   });
+  console.log("회원가입 데이터:", response.data);
   return response;
 };
 
 /** 2. 로그인 POST */
+// export const postSignIn = async ({ email: string, password: string }) => {
+//   const response = await axiosInstance.post("user/login", {
+//     email,
+//     password,
+//   });
+//   console.log("로그인 데이터:", response.data); // 응답 데이터 출력
+//   return response;
+// };
+
 export const postSignIn = async (email: string, password: string) => {
   const response = await axiosInstance.post("user/login", {
     email,
     password,
   });
-  console.log(response);
+  console.log("로그인 데이터:", response.data); // 응답 데이터 출력
+
+  const { resultCode, message, data } = response.data;
+  const { user_id, token } = data;
+  setCookie("token", token, { path: "/" });
+  console.log("Token:", token);
+
   return response;
 };
 
