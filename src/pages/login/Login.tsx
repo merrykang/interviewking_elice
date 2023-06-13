@@ -29,6 +29,7 @@ const LoginPage = () => {
   const onClickSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     const response = await postSignIn(email, password); // API 요청
+    getUserData();
     console.log("postSignIn :", response.data);
     const token = getTokenFromCookie();
     console.log("token :", token);
