@@ -1,3 +1,4 @@
+import { storeTokenInCookie } from "../components/auth/loginUtils";
 import { axiosInstance } from "./axiosInstance";
 // axios.defaults.withCredentials = true;
 
@@ -20,18 +21,24 @@ export const postSignUp = async (
 };
 
 /** 2. 로그인 POST */
-export const postSignIn = async (email: string, password: string) => {
+
+interface PostSignIn {
+  email: string;
+  password: string;
+}
+export const postSignIn = async ({ email, password }: PostSignIn) => {
   const response = await axiosInstance.post("user/login", {
     email,
     password,
   });
-  console.log(response);
+  console.log("로그인 데이터:", response.data); // 응답 데이터 출력
+
   return response;
 };
 
 /** 3. 내 정보 조회 GET */
 export const getUserData = async () => {
-  const response = await axiosInstance.get(`user/mypage`);
+  const response = await axiosInstance.get(`user/mypage/`);
   return response;
 };
 
