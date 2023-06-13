@@ -22,17 +22,17 @@ export const postSignUp = async (
 };
 
 /** 2. 로그인 POST */
-type PostSignIn = {
-  email: string;
-  password: string;
-};
-export const postSignIn = async ({ email, password }: PostSignIn) => {
-  const response = await axiosInstance.post("user/login", {
-    email,
-    password,
-  });
-  console.log("로그인 데이터:", response.data); // 응답 데이터 출력
-};
+// type PostSignIn = {
+//   email: string;
+//   password: string;
+// };
+// export const postSignIn = async ({ email, password }: PostSignIn) => {
+//   const response = await axiosInstance.post("user/login", {
+//     email,
+//     password,
+//   });
+//   console.log("로그인 데이터:", response.data); // 응답 데이터 출력
+// };
 // export const postSignIn = async (email: string, password: string) => {
 //   const response = await axiosInstance.post("user/login", {
 //     email,
@@ -48,11 +48,29 @@ export const postSignIn = async ({ email, password }: PostSignIn) => {
 //   return response;
 // };
 
+interface PostSignIn {
+  email: string;
+  password: string;
+}
+export const postSignIn = async ({ email, password }: PostSignIn) => {
+  const response = await axiosInstance.post("user/login", {
+    email,
+    password,
+  });
+  console.log("로그인 데이터:", response.data); // 응답 데이터 출력
+
+  const { resultCode, message, data } = response.data;
+  const { user_id, token } = data;
+  // 토큰 저장
+  setCookie({ name: "token", value: token });
+  console.log("Token:", token);
+
+  return response;
+};
+
 /** 3. 내 정보 조회 GET */
 export const getUserData = async () => {
-  const response = await axiosInstance.get(`user/mypage`, {
-    withCredentials: true,
-  });
+  const response = await axiosInstance.get(`user/mypage/`);
   return response;
 };
 
