@@ -2,82 +2,48 @@ import React, { ChangeEvent, useState, useEffect } from "react";
 import styled from "styled-components";
 import { colors } from "../../constants/colors";
 import Button from "@mui/material/Button";
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import LeftSignContainer from '../../components/auth/LeftSignContainer';
-import { storeTokenInCookie } from '../../components/auth/loginUtils';
+import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import LeftSignContainer from "../../components/auth/LeftSignContainer";
+import { storeTokenInCookie } from "../../components/auth/loginUtils";
+import { getUserData, postSignIn } from "../../api/api-user";
+import Cookies from "js-cookie";
+function setTokenCookie(token: string) {
+  Cookies.set("token", token, { expires: 7, path: "/" });
+}
+function getTokenFromCookie(): string | undefined {
+  return Cookies.get("token");
+}
 
 const LoginPage = () => {
+  const [token, setToken] = useState<string | undefined>(undefined);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
+  // useEffect(() => {
+  //   const cookieToken = getTokenFromCookie();
+  //   setToken(cookieToken);
+  // }, []);
 
-  const onClickSubmit = async (e: React.FormEvent) => {
+  const onClickSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    if (!email || !password) {
-      console.log("모든 필드를 입력해야 합니다.");
-      return;
-    }
-
-    try {
-      const response = await axios.post("http://34.22.79.51:5000/api/user/login", {
-        email,
-        password,
-      });
-      // response값 확인
-      console.log(response);
-
-      if (response.status === 200) {
-        const { resultCode, message, data } = response.data;
-
-        if (resultCode === '200') {
-          const { user_id, token } = data || {}; // 데이터가 undefined인 경우 빈 객체를 기본값으로 사용
-
-          if (user_id && token) {
-            storeTokenInCookie(token);
-
-            console.log("User ID:", user_id);
-            console.log("Token:", token);
-
-            fetchUserData(token, user_id);
-            // navigate('/'); // 로그인 성공시 홈으로 이동
-          }
-        } else {
-          setError(message);
-        }
-      } else {
-        setError("네트워크 오류가 발생했습니다.");
-      }
-
-
-    } catch (error) {
-      console.error("Error:", error);
-    }
-
-  };
-
-  const fetchUserData = async (token: string, userId: string) => {
-    console.log("Token:", token); // 토큰 값 확인
-
-    try {
-      const response = await axios.get(`http://34.22.79.51:5000/api/user/mypage/${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      // response 활용가능
-      // 1. 응답 데이터 상태로 설정
-      // const userData = response.data;
-      // setUser(userData);
-
-      // 2. 다른 함수에 전달하기
-      // processUserData(response.data);
-    } catch (error) {
-      console.error("Error:", error);
+    const response = await postSignIn(email, password); // API 요청
+    console.log("postSignIn :", response.data);
+    const token = getTokenFromCookie();
+    console.log("token :", token);
+    if (response && response.data && response.data.token) {
+      const token = response.data.token;
+      setTokenCookie(token); // 토큰을 쿠키에 저장
+      console.log("토큰은 :", token);
+      console.log("내 정보 조회");
+      getUserData();
+    } else {
+      console.log("에러");
     }
   };
+  // console.log("내 정보 조회2");
+  // getUserData();
 
   const onChangeEmail = (e: ChangeEvent<HTMLInputElement>) => {
     setEmail(e.target.value);
@@ -185,7 +151,7 @@ const StyledBtnWrapper = styled.div`
   display: flex;
   margin-top: 40px;
   margin-left: auto;
-`
+`;
 
 const StyledSignupBtn = styled(Button)`
   && {
