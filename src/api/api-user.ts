@@ -59,12 +59,6 @@ export const postSignIn = async ({ email, password }: PostSignIn) => {
   });
   console.log("로그인 데이터:", response.data); // 응답 데이터 출력
 
-  const { resultCode, message, data } = response.data;
-  const { user_id, token } = data;
-  // 토큰 저장
-  setCookie({ name: "token", value: token });
-  console.log("Token:", token);
-
   return response;
 };
 
