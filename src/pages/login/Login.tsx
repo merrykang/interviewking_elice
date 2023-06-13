@@ -7,7 +7,7 @@ import axios from "axios";
 import LeftSignContainer from "../../components/auth/LeftSignContainer";
 import { storeTokenInCookie } from "../../components/auth/loginUtils";
 import { getUserData, postSignIn } from "../../api/api-user";
-import { useCookies } from "react-cookie";
+// import { useCookies } from "react-cookie";
 import { useMutation } from "react-query";
 
 const LoginPage = () => {
@@ -15,7 +15,7 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const navigate = useNavigate();
   const [error, setError] = useState("");
-  const [cookies, setCookie] = useCookies(["token"]);
+  // const [cookies, setCookie] = useCookies(["token"]);
 
   const { mutate: loginMutation } = useMutation(postSignIn, {
     // useQuery와 동일합니다 에러가 나면 실행되는 함수입니다.
