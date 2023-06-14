@@ -1,13 +1,14 @@
-const express = require('express');
-const router = express.Router();
-const path = require('path');
-const cors = require('cors');
+import express from 'express';
+import path from 'path';
+import cors from 'cors';
 
-const userRouter = require('./user');
-const communityRouter = require('./community');
+import userRouter from './user';
+import communityRouter from './community';
+import studyRouter from './study';
+import studyFeedbackRouter from './study_feedback';
+
+const router = express.Router();
 const indexPath = path.join(__dirname, '../pages');
-const studyRouter = require('./study');
-const studyFeedbackRouter = require('./study_feedback');
 
 router.use(
   cors({
@@ -27,4 +28,4 @@ router.use('/api/community', communityRouter);
 router.use('/api/study', studyRouter);
 router.use('/api/feedback', studyFeedbackRouter);
 
-module.exports = router;
+export default router;

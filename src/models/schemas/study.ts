@@ -1,10 +1,9 @@
-const { Schema } = require('mongoose');
-const mongoose = require('mongoose');
+import { Schema } from 'mongoose';
 
 const StudySchema = new Schema({
   // 스터디 정보
-  leader_id: { type: mongoose.Types.ObjectId },
-  study_id: { type: mongoose.Types.ObjectId }, // identification value
+  leader_id: { type: Schema.Types.ObjectId },
+  study_id: { type: Schema.Types.ObjectId }, // identification value
   study_name: { type: String, unique: false },
   leader_name: { type: String }, // 스터디장 이름
   title: { type: String },
@@ -25,4 +24,4 @@ const StudySchema = new Schema({
   },
 });
 
-module.exports = StudySchema;
+export default StudySchema;

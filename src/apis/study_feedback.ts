@@ -1,26 +1,41 @@
-const { StudyFeedback } = require('../models/index');
-const { Study } = require('../models/index');
-const { User } = require('../models/index');
+import { StudyFeedback } from '../models/index';
+import { Study } from '../models/index';
+import { User } from '../models/index';
+import { Request, Response, NextFunction } from 'express';
+import { Schema } from 'mongoose';
 
-const studyFeedbackApi = {
+interface CustomRequest extends Request {
+  user: {
+    user_id: Schema.Types.ObjectId;
+  };
+}
+interface CustomResponse extends Response {
+  study_feedback: any;
+}
+
+export const studyFeedbackApi = {
   /**피드백, 댓글 작성*/
-  async newFeedback(req, res, next) {
+  async newFeedback(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       const user_id = req.user.user_id;
       console.log(user_id);
       const user = await User.findOne({ _id: user_id });
-      const { study_id, content_type, content } = req.body;
-      const createInfo = {
-        user_id,
-        user_name: user.user_name,
-        study_id,
-        content_type,
-        content,
-      };
+      if (!user) {
+        throw new Error('Not found user');
+      } else {
+        const { study_id, content_type, content } = req.body;
+        const createInfo = {
+          user_id,
+          user_name: user.user_name,
+          study_id,
+          content_type,
+          content,
+        };
 
-      const createdFeedback = await StudyFeedback.create(createInfo);
-      res.study_feedback = createdFeedback;
-      res.status(200).json(createdFeedback);
+        const createdFeedback = await StudyFeedback.create(createInfo);
+        res.study_feedback = createdFeedback;
+        res.status(200).json(createdFeedback);
+      }
     } catch (error) {
       console.log(error);
       res.status(407).json({
@@ -31,7 +46,7 @@ const studyFeedbackApi = {
   },
 
   /**피드백, 댓글 조회(스터디별)*/
-  async studyFeedback(req, res, next) {
+  async studyFeedback(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       const { study_id } = req.params;
       const foundFeedback = await StudyFeedback.find({ study_id });
@@ -47,7 +62,7 @@ const studyFeedbackApi = {
   },
 
   /**피드백, 댓글 조회(유저별)*/
-  async userFeedback(req, res, next) {
+  async userFeedback(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       const { user_id } = req.body;
       console.log(user_id);
@@ -65,7 +80,7 @@ const studyFeedbackApi = {
   },
 
   /**피드백, 댓글 수정*/
-  async updateFeedback(req, res, next) {
+  async updateFeedback(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       // 유저 권한 판단
       const { study_id, content_type, content } = req.body;
@@ -87,7 +102,7 @@ const studyFeedbackApi = {
   },
 
   /**피드백, 댓글 삭제*/
-  async deleteFeedback(req, res, next) {
+  async deleteFeedback(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       // 유저 권한 판단
       const { study_id } = req.params;
@@ -108,5 +123,3 @@ const studyFeedbackApi = {
     }
   },
 };
-
-module.exports = studyFeedbackApi;

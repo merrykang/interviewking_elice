@@ -1,7 +1,8 @@
-const { Router } = require('express');
+import { Router } from 'express';
+import studyApi from '../apis/study';
+import userTokenValidate from '../middlewares/userTokenValidate';
+
 const router = Router();
-const studyApi = require('../apis/study');
-const userTokenValidate = require('../middlewares/userTokenValidate');
 
 router.post('/create', userTokenValidate, studyApi.newStudy); // 스터디 개설
 router.post('/apply', userTokenValidate, studyApi.applyStudy); // 스터디 신청
@@ -13,4 +14,4 @@ router.delete('/', userTokenValidate, studyApi.leaveUser); // 스터디 탈퇴
 router.delete('/:study_id/:member_id', userTokenValidate, studyApi.deleteUser); // 스터디 회원 관리(장)
 router.delete('/:study_id', userTokenValidate, studyApi.deleteStudy); // 스터디 정보 삭제(장)
 
-module.exports = router;
+export default router;

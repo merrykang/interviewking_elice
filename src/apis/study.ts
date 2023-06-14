@@ -1,14 +1,22 @@
-const { Study } = require('../models/index');
-const { User } = require('../models/index');
-const { StudyRelation } = require('../models/index');
-const { StudyFeedback } = require('../models/index');
+import { Study } from '../models/index';
+import { User } from '../models/index';
+import { StudyRelation } from '../models/index';
+import { StudyFeedback } from '../models/index';
+import { Request, Response, NextFunction } from 'express';
+import { Schema } from 'mongoose';
+
+interface CustomRequest extends Request {
+  user: {
+    user_id: Schema.Types.ObjectId;
+  };
+}
 
 // const mongoose = require('mongoose');
 // const { ObjectId } = require('mongodb');
 
-const studyApi = {
+export const studyApi = {
   /**스터디 개설*/
-  async newStudy(req, res, next) {
+  async newStudy(req: CustomRequest, res: Response, next: NextFunction) {
     try {
       // 스터디 개설
       const leader_id = req.user.user_id;
@@ -50,7 +58,7 @@ const studyApi = {
       const createdRelation = await StudyRelation.create(createRelation);
       res.study_relation = createdRelation;
     } catch (error) {
-      console.log(error.message);
+      console.log(error);
       res.status(400).json({
         code: 400,
         message: 'wrong request',
@@ -59,7 +67,7 @@ const studyApi = {
   },
 
   /**스터디 신청*/
-  async applyStudy(req, res, next) {
+  async applyStudy(req: CustomRequest, res: Response, next: NextFunction) {
     try {
       const member_id = req.user.user_id;
       console.log(member_id);
@@ -84,7 +92,7 @@ const studyApi = {
   },
 
   /**스터디 신청 수락*/
-  async acceptStudy(req, res, next) {
+  async acceptStudy(req: CustomRequest, res: Response, next: NextFunctions) {
     try {
       const { member_id, study_id } = req.params;
       const leader_id = req.user.user_id;
@@ -120,7 +128,7 @@ const studyApi = {
   },
 
   /**스터디 정보 조회(전체)*/
-  async getStudy(req, res, next) {
+  async getStudy(req: CustomRequest, res: Response, next: NextFunction) {
     try {
       const foundStudy = await Study.find({});
       if (!foundStudy) throw new Error('Not found');
@@ -135,7 +143,7 @@ const studyApi = {
   },
 
   /**스터디 정보 조회(모집 중)*/
-  async getStudyOne(req, res, next) {
+  async getStudyOne(req: CustomRequest, res: Response, next: NextFunction) {
     try {
       const { study_id } = req.params;
       const foundStudy = await Study.findOne({ _id: study_id });
@@ -151,7 +159,7 @@ const studyApi = {
   },
 
   /**스터디 정보 수정*/
-  async updateStudy(req, res, next) {
+  async updateStudy(req: CustomRequest, res: Response, next: NextFunction) {
     try {
       // 스터디장 권한 판단
       const { study_id } = req.params;
@@ -197,7 +205,7 @@ const studyApi = {
   },
 
   /**스터디 회원 관리*/
-  async deleteUser(req, res, next) {
+  async deleteUser(req: CustomRequest, res: Response, next: NextFunction) {
     try {
       // 스터디장 권한 판단
       const { study_id, member_id } = req.params;
@@ -223,7 +231,7 @@ const studyApi = {
   },
 
   /**스터디 탈퇴*/
-  async leaveUser(req, res, next) {
+  async leaveUser(req: CustomRequest, res: Response, next: NextFunction) {
     try {
       // 스터디장이면 스터디도 삭제
       const leader_id = req.user.user_id;
@@ -255,7 +263,7 @@ const studyApi = {
   },
 
   /**스터디 삭제*/
-  async deleteStudy(req, res, next) {
+  async deleteStudy(req: CustomRequest, res: Response, next: NextFunction) {
     try {
       // 스터디장 권한 판단
       const { study_id } = req.params;
@@ -285,5 +293,3 @@ const studyApi = {
     }
   },
 };
-
-module.exports = studyApi;

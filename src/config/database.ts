@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 // DB 연결
 mongoose
@@ -12,4 +12,4 @@ mongoose
   .then(() => console.log('Successfully connected to MongoDB'))
   .catch(err => console.log(err));
 
-module.exports = mongoose;
+export default mongoose;

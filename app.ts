@@ -1,6 +1,7 @@
-require('dotenv').config({ path: '.env' });
+import dotenv from 'dotenv';
+import express from 'express';
 
-const express = require('express');
+dotenv.config({ path: '.env' });
 const app = express();
 const PORT = process.env.PORT;
 
@@ -20,3 +21,6 @@ app.use('/', indexRouter);
 app.listen(PORT, () => {
   console.log(`Server on http://localhost:${PORT}`);
 });
+
+export default app;
+export { PORT };

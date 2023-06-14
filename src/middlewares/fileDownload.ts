@@ -1,14 +1,14 @@
-const { Router } = require('express');
+import { Router } from 'express';
+import { Community } from '../models';
+import { GetObjectCommand } from '@aws-sdk/client-s3';
+import s3 from '../config/s3';
+import { PassThrough } from 'stream';
+
 const router = Router();
-const { Community } = require('../models');
-const { GetObjectCommand } = require('@aws-sdk/client-s3');
-const s3 = require('../config/s3');
-const { PassThrough, Readable } = require('stream');
 
 /** 파일 다운로드 */
 async function fileDownload(req, res, next) {
   try {
-
     /** 클라이언트에서 요청한 파일 찾기 */
     const reqNo = req.query.community_no;
     const reqContent = await Community.find({ community_no: reqNo });
@@ -30,7 +30,7 @@ async function fileDownload(req, res, next) {
       /** 파일 데이터를 버퍼로 읽기 */
       const fileData = await new Promise((resolve, reject) => {
         const chunks = [];
-        response.Body.on('data', (chunk) => chunks.push(chunk));
+        response.Body.on('data', chunk => chunks.push(chunk));
         response.Body.on('end', () => resolve(Buffer.concat(chunks)));
         response.Body.on('error', reject);
       });
@@ -66,4 +66,4 @@ async function fileDownload(req, res, next) {
   }
 }
 
-module.exports = fileDownload;
+export default fileDownload;
