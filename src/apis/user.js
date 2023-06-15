@@ -38,11 +38,10 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.userApi = void 0;
 var index_1 = require("../models/index");
-var express_1 = require("express");
-var app = (0, express_1.default)();
+var app = require('express');
 // const ObjectId = mongoose.Types.ObjectId;
-var jsonwebtoken_1 = require("jsonwebtoken");
-var bcrypt_1 = require("bcrypt");
+var jwt = require("jsonwebtoken");
+var bcrypt = require("bcrypt");
 var secretKey = process.env.SECRET_KEY;
 var user_1 = require("../utils/user");
 // dts_insert, dts_update 필드에 삽입할 변수 값 설정
@@ -140,7 +139,7 @@ var userApi = {
                                     },
                                 })];
                         }
-                        return [4 /*yield*/, bcrypt_1.default.hash(password, 10)];
+                        return [4 /*yield*/, bcrypt.hash(password, 10)];
                     case 2:
                         hashedPassword = _b.sent();
                         newUserInfo = {
@@ -193,7 +192,7 @@ var userApi = {
                                     message: '사용자가 존재하지 않습니다.',
                                 })];
                         }
-                        return [4 /*yield*/, bcrypt_1.default.compare(password, findUser.password)];
+                        return [4 /*yield*/, bcrypt.compare(password, findUser.password)];
                     case 2:
                         isPasswordValid = _b.sent();
                         if (!isPasswordValid) {
@@ -205,7 +204,7 @@ var userApi = {
                         payload = {
                             user_id: findUser._id, // 사용자의 MongoDB ObjectID
                         };
-                        token = jsonwebtoken_1.default.sign(payload, secretKey, { expiresIn: '3d' });
+                        token = jwt.sign(payload, secretKey, { expiresIn: '3d' });
                         // JWT 토큰 쿠키에 담아주기
                         res.cookie('token', token, {
                             httpOnly: true,
@@ -343,7 +342,7 @@ var userApi = {
                                     message: '변경사항이 없습니다.',
                                 })];
                         }
-                        return [4 /*yield*/, bcrypt_1.default.hash(password, 10)];
+                        return [4 /*yield*/, bcrypt.hash(password, 10)];
                     case 3:
                         hashedPassword = _b.sent();
                         return [4 /*yield*/, index_1.User.updateOne({ email: email }, {
@@ -413,7 +412,7 @@ var userApi = {
                                     message: '해당 사용자를 찾을 수 없습니다.',
                                 })];
                         }
-                        return [4 /*yield*/, bcrypt_1.default.compare(password, findUser.password)];
+                        return [4 /*yield*/, bcrypt.compare(password, findUser.password)];
                     case 3:
                         isPasswordValid = _b.sent();
                         if (!isPasswordValid) {

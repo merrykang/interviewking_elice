@@ -1,6 +1,6 @@
-import express from 'express';
-import path from 'path';
-import cors from 'cors';
+import * as express from 'express';
+import * as path from 'path';
+const cors = require('cors');
 
 import userRouter from './user';
 import communityRouter from './community';

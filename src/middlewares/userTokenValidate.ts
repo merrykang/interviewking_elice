@@ -1,8 +1,8 @@
 import { User } from '../models/index';
-import express from 'express';
-import bodyParser from 'body-parser';
+import * as express from 'express';
+import * as bodyParser from 'body-parser';
 
-const app = express();
+const app = require('express');
 const mongoose = require('mongoose');
 const ObjectId = mongoose.Types.ObjectId;
 const jwt = require('jsonwebtoken');

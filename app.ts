@@ -1,5 +1,5 @@
 import { config } from 'dotenv';
-import express from 'express';
+import express = require('express');
 
 config();
 const app = express();
@@ -9,7 +9,7 @@ const PORT = process.env.PORT;
 import indexRouter from './src/routes/index';
 
 // JWT token Middleware
-import cookieParser from 'cookie-parser';
+import cookieParser = require('cookie-parser');
 app.use(cookieParser(''));
 
 // Middleware Setting

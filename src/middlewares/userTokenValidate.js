@@ -36,8 +36,7 @@ var __generator = (this && this.__generator) || function (thisArg, body) {
     }
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-var express_1 = require("express");
-var app = (0, express_1.default)();
+var app = require('express');
 var mongoose = require('mongoose');
 var ObjectId = mongoose.Types.ObjectId;
 var jwt = require('jsonwebtoken');

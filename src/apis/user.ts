@@ -1,14 +1,14 @@
 import { User } from '../models/index';
-import express from 'express';
-import bodyParser from 'body-parser';
-const app = express();
+import  * as express from 'express';
+import  * as bodyParser from 'body-parser';
+const app = require('express');
 
 import { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
 // const ObjectId = mongoose.Types.ObjectId;
 
-import jwt from 'jsonwebtoken';
-import bcrypt from 'bcrypt';
+import  * as jwt from 'jsonwebtoken';
+import  * as bcrypt from 'bcrypt';
 
 const secretKey = process.env.SECRET_KEY;
 
