@@ -1,9 +1,11 @@
-const { Community, CommunityReply, User } = require('../models');
+import { Community, CommunityReply, User } from '../models';
+
+import { Request, Response } from 'express';
 
 const communityApi = {
 
     /** 전체목록조회 */
-    async getAllList(req, res) {
+    async getAllList(req: Request, res: Response) {
 
         try {
 
@@ -33,12 +35,12 @@ const communityApi = {
             });
         } catch (err) {
           console.log(err);
-          throw new Error(err);
+          throw new Error(err as string);
         }
     },
 
     /** 게시글등록 */
-    async postContent(req, res) {
+    async postContent(req: Request, res: Response) {
     
         try {
             const { user_id, title, content } = req.body;
@@ -83,12 +85,12 @@ const communityApi = {
                 data: newContent,
             });
         } catch (err) {
-            throw new Error(err);
+            throw new Error(err as string);
         }
     },
 
     /** 게시글조회(개별) : 게시글+댓글+첨부파일 */
-    async getContent(req, res) {
+    async getContent(req: Request, res: Response) {
         try {
 
             const { community_id, user_id } = req.query;
@@ -113,12 +115,12 @@ const communityApi = {
             
         } catch (err) {
         console.log(err);
-        throw new Error(err);
+        throw new Error(err as string);
         }
     },
 
     /** 첨부파일 다운로드 : 프론트 구현 확인 후 삭제예정 */
-    // async fileDownload(req, res) {
+    // async fileDownload(req: Request, res: Response) {
     //     try {
 
     //         const fileStream = req.fileStream;        
@@ -140,12 +142,12 @@ const communityApi = {
     //         }
     //     } catch (err) {
     //     console.log(err);
-    //     throw new Error(err);
+    //     throw new Error(err as string);
     //     }
     // },
 
     /** 게시글수정 */
-    async modifyContent(req, res) {
+    async modifyContent(req: Request, res: Response) {
         try {
             const { community_id, title, content, file_etag, file_name, file_key } = req.body;
             const findContent = await Community.findOne({ community_id });
@@ -180,12 +182,12 @@ const communityApi = {
             });
         } catch (err) {
             console.log(err);
-            throw new Error(err);
+            throw new Error(err as string);
         }
     },
 
     /** 게시글삭제 */
-    async deleteContent(req, res) {
+    async deleteContent(req: Request, res: Response) {
 
         try {
             const findContent = await Community.findOne({ community_id: req.query.community_id });
@@ -209,12 +211,12 @@ const communityApi = {
             });
         } catch (err) {
             console.log(err);
-            throw new Error(err);
+            throw new Error(err as string);
         }
     },
 
     /** 댓글등록 */
-    async postReply(req, res) {
+    async postReply(req: Request, res: Response) {
 
         try {
             const { reply_user_id, reply_content, community_id } = req.body;
@@ -251,12 +253,12 @@ const communityApi = {
             });
         } catch (err) {
             console.log(err);
-            throw new Error(err);
+            throw new Error(err as string);
         }
     },      
 
     /** 댓글수정 */
-    async modifyReply(req, res) {
+    async modifyReply(req: Request, res: Response) {
         try {
 
             const { reply_id, reply_content } = req.body;
@@ -284,12 +286,12 @@ const communityApi = {
             });
         } catch (err) {
             console.log(err);
-            throw new Error(err);
+            throw new Error(err as string);
         }
     },  
 
     /** 댓글삭제 */
-    async deleteReply(req, res) {
+    async deleteReply(req: Request, res: Response) {
         try {
             const findReply = await CommunityReply.findOne({ reply_id: req.query.reply_id });
 
@@ -312,9 +314,9 @@ const communityApi = {
             });
         } catch (err) {
             console.log(err);
-            throw new Error(err);
+            throw new Error(err as string);
         }
     },
 }
 
-module.exports = communityApi;
+export default communityApi;

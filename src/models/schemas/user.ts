@@ -1,10 +1,22 @@
-const mongoose = require('mongoose');
-const { Schema } = mongoose;
+import mongoose, { Schema, Document } from 'mongoose';
 
-const UserSchema = new Schema(
+interface User extends Document {
+  user_id?: mongoose.Types.ObjectId;
+  user_name: string;
+  email: string;
+  password: string;
+  privacy_use_yn?: string;
+  marketing_use_yn?: string;
+  intro_yn?: string;
+  phone_number?: string;
+  admin_yn?: boolean;
+  dts_insert: string;
+  dts_update?: string;
+}
+
+const UserSchema: Schema = new Schema<User>(
   {
-    // user_id: { type: mongoose.Types.ObjectId, required: true, unique: true },    // identification value
-    user_id: { type: mongoose.Types.ObjectId }, // identification value   // 실제로는 _id 값으로 식별하지만, user_id 도 필요하다고 해서 추가!
+    user_id: { type: mongoose.Types.ObjectId },
     user_name: { type: String, required: true, unique: false },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, unique: false },
@@ -21,4 +33,4 @@ const UserSchema = new Schema(
   },
 );
 
-module.exports = UserSchema;
+export default mongoose.model<User>('User', UserSchema);

@@ -1,14 +1,15 @@
-require('dotenv').config({ path: '.env' });
+import dotenv from "dotenv";
+dotenv.config({ path: ".env" });
 
-const express = require('express');
+import express from 'express';
 const app = express();
 const PORT = process.env.PORT;
 
 // Router
-const indexRouter = require('./src/routes/index');
+import indexRouter from './src/routes/index';
 
-// JWT token Middleware
-const cookieParser = require('cookie-parser');
+// JWT token Middleware 
+import cookieParser from 'cookie-parser';
 app.use(cookieParser());
 
 // Middleware Setting

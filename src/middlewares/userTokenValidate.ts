@@ -1,18 +1,23 @@
-const { User }  = require('../models/index');
+import { Request, Response, NextFunction } from 'express';
+import jwt, { Secret } from 'jsonwebtoken';
+import { User } from '../models';
 
-const express = require('express');
-const bodyParser = require('body-parser');
-const app = express();
+import express from 'express';
+import bodyParser from 'body-parser';
 
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 const ObjectId = mongoose.Types.ObjectId;
 
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+import bcrypt from 'bcrypt';
 
 const secretKey = process.env.SECRET_KEY;
 
-const userTokenValidate = async (req, res, next) => {
+interface AuthenticatedRequest extends Request {
+  user_id?: any,
+  user: any
+}
+
+const userTokenValidate = async (req: AuthenticatedRequest, res: Response, next: NextFunction) => {
   // console.log('미들웨어 실행!');
 
   // 쿠키값 사용 주석 처리
@@ -29,19 +34,19 @@ const userTokenValidate = async (req, res, next) => {
   }
 
   try {
-    const decoded = jwt.verify(token, secretKey);
-
+    const decoded = jwt.verify(token, secretKey as Secret) as { user: typeof User };
+    
     // 토큰이 유효한 경우
-    req.user = decoded;
+    req.user = decoded.user;
     next();
   } catch (err) {
-    if (err.name === 'JsonWebTokenError') {
+    if ((err as Error).name === 'JsonWebTokenError') {
       // 토큰이 유효하지 않은 경우
       return res.status(401).json({
         resultCode: "401",
         message: "유효하지 않은 토큰입니다."
       });
-    } else if (err.name === 'TokenExpiredError') {
+    } else if ((err as Error).name === 'TokenExpiredError') {
       // 토큰이 만료된 경우
       return res.status(401).json({
         resultCode: "401",
@@ -57,4 +62,4 @@ const userTokenValidate = async (req, res, next) => {
   }
 };
 
-module.exports = userTokenValidate;
+export default userTokenValidate;
