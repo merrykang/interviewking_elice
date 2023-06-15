@@ -1,14 +1,15 @@
-const { Router } = require('express');
+import { Router } from 'express';
+import { Community } from '../models';
+import { GetObjectCommand } from '@aws-sdk/client-s3';
+import s3 from '../config/s3';
+import { Readable } from 'stream';
+
 const router = Router();
-const { Community } = require('../models');
-const { GetObjectCommand } = require('@aws-sdk/client-s3');
-const s3 = require('../config/s3');
-const { PassThrough, Readable } = require('stream');
+import { Request, Response, NextFunction } from 'express';
 
 /** 파일 다운로드 */
-async function fileDownload(req, res, next) {
+async function fileDownload(req: Request, res: Response, next: NextFunction) {
   try {
-
     /** 클라이언트에서 요청한 파일 찾기 */
     const reqNo = req.query.community_no;
     const reqContent = await Community.find({ community_no: reqNo });
@@ -17,7 +18,7 @@ async function fileDownload(req, res, next) {
     const etag = reqContent[0].file_etag;
 
     /** S3에서 다운로드할 파일 가져오기 */
-    const downloadFile = async (key, etag) => {
+    const downloadFile = async (key: any, etag: any) => {
       const params = {
         Bucket: '13team',
         Key: key,
@@ -28,16 +29,25 @@ async function fileDownload(req, res, next) {
       const response = await s3.send(command);
 
       /** 파일 데이터를 버퍼로 읽기 */
-      const fileData = await new Promise((resolve, reject) => {
-        const chunks = [];
-        response.Body.on('data', (chunk) => chunks.push(chunk));
-        response.Body.on('end', () => resolve(Buffer.concat(chunks)));
-        response.Body.on('error', reject);
+      const fileData = await new Promise<Buffer>((resolve, reject) => {
+        const chunks: Uint8Array[] = [];
+        if (!response.Body) {
+          reject(new Error('Response body is undefined'));
+        } else {
+          const PassThroughStream = response.Body as Readable;
+          PassThroughStream.on('data', (chunk: Uint8Array) => chunks.push(chunk));
+          PassThroughStream.on('end', () => resolve(Buffer.concat(chunks)));
+          PassThroughStream.on('error', reject);
+        }
       });
 
       /** 클라이언트에 전달할 파일 구성 */
       const contentType = response.ContentType;
-      const contentDisposition = `attachment; filename=${response.Metadata.filename}`;
+      let contentDisposition = 'attachment';
+
+      if (response.Metadata && response.Metadata.filename) {
+        contentDisposition += `; filename=${response.Metadata.filename}`;
+      }
 
       res.set('Content-Type', contentType);
       res.set('Content-Disposition', contentDisposition);
@@ -66,4 +76,4 @@ async function fileDownload(req, res, next) {
   }
 }
 
-module.exports = fileDownload;
+export default fileDownload;

@@ -1,9 +1,9 @@
-import { Schema } from 'mongoose';
-
-const UserSchema = new Schema(
-  {
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+var mongoose_1 = require("mongoose");
+var UserSchema = new mongoose_1.Schema({
     // user_id: { type: mongoose.Types.ObjectId, required: true, unique: true },    // identification value
-    user_id: { type: Schema.Types.ObjectId }, // identification value   // 실제로는 _id 값으로 식별하지만, user_id 도 필요하다고 해서 추가!
+    user_id: { type: mongoose_1.Schema.Types.ObjectId },
     user_name: { type: String, required: true, unique: false },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, unique: false },
@@ -14,10 +14,7 @@ const UserSchema = new Schema(
     admin_yn: { type: Boolean, required: false, unique: false, default: false },
     dts_insert: { type: String, required: true, unique: false, default: '' },
     dts_update: { type: String, unique: false, default: '' },
-  },
-  {
+}, {
     versionKey: false,
-  },
-);
-
-export default UserSchema;
+});
+exports.default = UserSchema;

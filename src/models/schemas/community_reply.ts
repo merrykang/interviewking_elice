@@ -1,42 +1,28 @@
+import { Schema } from 'mongoose';
 
-import mongoose, { Schema, Document, Model } from "mongoose";
-
-interface ICommunityReply extends Document {
-reply_id: number;
-reply_user_id?: mongoose.Types.ObjectId;
-reply_user_name: string;
-reply_content: string;
-community_id: number;
-}
-
-const CommunityReplySchema: Schema<ICommunityReply> = new Schema<ICommunityReply>(
-{
+const CommunityReplySchema = new Schema(
+  {
     reply_id: {
-    type: Number,
+      type: Number,
     },
     reply_user_id: {
-    type: mongoose.Types.ObjectId,
-    ref: "User",
+      type: Schema.Types.ObjectId,
+      ref: 'User',
     },
     reply_user_name: {
-    type: String,
+      type: String,
     },
     reply_content: {
-    type: String,
+      type: String,
     },
     community_id: {
-    type: Number,
-    ref: "Community",
+      type: Number,
+      ref: 'Community',
     },
-    },
-    {
+  },
+  {
     timestamps: true,
-    }
+  },
 );
 
-const CommunityReplyModel: Model<ICommunityReply> = mongoose.model<ICommunityReply>(
-"CommunityReply",
-CommunityReplySchema
-);
-
-export default CommunityReplyModel;
+export default CommunityReplySchema;

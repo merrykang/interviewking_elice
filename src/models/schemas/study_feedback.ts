@@ -1,28 +1,16 @@
-import { Schema, Document, Types, model } from 'mongoose';
+import { Schema } from 'mongoose';
 
-interface IStudyFeedback extends Document {
-  study_id?: Types.ObjectId;
-  user_id?: Types.ObjectId;
-  user_name: string;
-  content_type: boolean;
-  content: string;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-const StudyFeedbackSchema: Schema<IStudyFeedback> = new Schema<IStudyFeedback>(
+const StudyFeedbackSchema = new Schema(
   {
-    study_id: { type: Types.ObjectId, unique: false, ref: 'Study' },
-    user_id: { type: Types.ObjectId, unique: false, ref: 'User' },
-    user_name: { type: String, unique: false, ref: 'User' },
-    content_type: { type: Boolean },
+    study_id: { type: Schema.Types.ObjectId, unique: false, ref: 'Study' }, // reference
+    user_id: { type: Schema.Types.ObjectId, unique: false, ref: 'User' }, // reference
+    user_name: { type: String, unique: false, ref: 'User' }, // reference
+    content_type: { type: Boolean }, // 0: 피드백 본문, 1: 피드백 댓글
     content: { type: String },
   },
   {
-    timestamps: true,
+    timestamps: true, // 댓글작성일시: date
   },
 );
 
-const StudyFeedbackModel = model<IStudyFeedback>('StudyFeedback', StudyFeedbackSchema);
-
-export default StudyFeedbackModel;
+export default StudyFeedbackSchema;

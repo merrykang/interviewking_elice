@@ -1,0 +1,16 @@
+"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.StudyFeedback = exports.StudyRelation = exports.Study = exports.User = exports.CommunityReply = exports.Community = void 0;
+var database_1 = require("../config/database");
+var community_1 = require("./schemas/community");
+var community_reply_1 = require("./schemas/community_reply");
+var user_1 = require("./schemas/user");
+var study_1 = require("./schemas/study");
+var study_relation_1 = require("./schemas/study_relation");
+var study_feedback_1 = require("./schemas/study_feedback");
+exports.Community = database_1.default.model('Community', community_1.default);
+exports.CommunityReply = database_1.default.model('CommunityReply', community_reply_1.default);
+exports.User = database_1.default.model('User', user_1.default);
+exports.Study = database_1.default.model('Study', study_1.default);
+exports.StudyRelation = database_1.default.model('StudyRelation', study_relation_1.default);
+exports.StudyFeedback = database_1.default.model('StudyFeedback', study_feedback_1.default);

@@ -1,4 +1,4 @@
-import express, { Router } from 'express';
+import express from 'express';
 import path from 'path';
 import cors from 'cors';
 
@@ -7,17 +7,17 @@ import communityRouter from './community';
 import studyRouter from './study';
 import studyFeedbackRouter from './study_feedback';
 
-const router: Router = express.Router();
-const indexPath: string = path.join(__dirname, "../pages");
+const router = express.Router();
+const indexPath = path.join(__dirname, '../pages');
 
 router.use(
   cors({
     origin: 'http://localhost:3000',
-    credentials: true,
+    credentials: true, // 토큰 에러 테스트
     optionsSuccessStatus: 200,
     exposedHeaders: ['Access-Control-Allow-Origin'],
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
-    allowedHeaders: ['Content-Type', 'Authorization'],
+    allowedHeaders: ['Content-Type', 'Authorization'], // 토큰 에러 테스트
   }),
 );
 
