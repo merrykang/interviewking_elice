@@ -5,37 +5,34 @@ import { Request, Response, NextFunction } from 'express';
 import { Schema } from 'mongoose';
 
 interface CustomRequest extends Request {
-  user: {
-    user_id: Schema.Types.ObjectId;
-  };
+  user: any;
 }
 interface CustomResponse extends Response {
   study_feedback: any;
 }
 
-export const studyFeedbackApi = {
+const studyFeedbackApi = {
   /**피드백, 댓글 작성*/
-  async newFeedback(req: CustomRequest, res: CustomResponse, next: NextFunction) {
+  async newFeedback(req: CustomRequest, res: CustomResponse, next: NextFunction): Promise<void> {
     try {
       const user_id = req.user.user_id;
       console.log(user_id);
       const user = await User.findOne({ _id: user_id });
       if (!user) {
         throw new Error('Not found user');
-      } else {
-        const { study_id, content_type, content } = req.body;
-        const createInfo = {
-          user_id,
-          user_name: user.user_name,
-          study_id,
-          content_type,
-          content,
-        };
-
-        const createdFeedback = await StudyFeedback.create(createInfo);
-        res.study_feedback = createdFeedback;
-        res.status(200).json(createdFeedback);
       }
+      const { study_id, content_type, content } = req.body;
+      const createInfo = {
+        user_id,
+        user_name: user.user_name,
+        study_id,
+        content_type,
+        content,
+      };
+
+      const createdFeedback = await StudyFeedback.create(createInfo);
+      res.study_feedback = createdFeedback;
+      res.status(200).json(createdFeedback);
     } catch (error) {
       console.log(error);
       res.status(407).json({
@@ -123,3 +120,6 @@ export const studyFeedbackApi = {
     }
   },
 };
+
+export { CustomRequest, CustomResponse, studyFeedbackApi };
+export default studyFeedbackApi;

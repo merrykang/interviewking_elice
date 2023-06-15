@@ -10,18 +10,26 @@ interface CustomRequest extends Request {
     user_id: Schema.Types.ObjectId;
   };
 }
+interface CustomResponse extends Response {
+  study_feedback: any;
+  study_relation: any;
+  study: any;
+}
 
 // const mongoose = require('mongoose');
 // const { ObjectId } = require('mongodb');
 
-export const studyApi = {
+const studyApi = {
   /**스터디 개설*/
-  async newStudy(req: CustomRequest, res: Response, next: NextFunction) {
+  async newStudy(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       // 스터디 개설
       const leader_id = req.user.user_id;
       console.log(leader_id);
       const leader = await User.findOne({ _id: leader_id });
+      if (!leader) {
+        throw new Error('Not found leader');
+      }
       console.log(leader.user_name);
       const { study_name, title, content, start, end, deadline, headcount, chat_link, status } =
         req.body;
@@ -67,7 +75,7 @@ export const studyApi = {
   },
 
   /**스터디 신청*/
-  async applyStudy(req: CustomRequest, res: Response, next: NextFunction) {
+  async applyStudy(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       const member_id = req.user.user_id;
       console.log(member_id);
@@ -92,7 +100,7 @@ export const studyApi = {
   },
 
   /**스터디 신청 수락*/
-  async acceptStudy(req: CustomRequest, res: Response, next: NextFunctions) {
+  async acceptStudy(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       const { member_id, study_id } = req.params;
       const leader_id = req.user.user_id;
@@ -114,10 +122,14 @@ export const studyApi = {
 
       // 스터디 신청 수락 인원 1 증가
       const foundStudy = await Study.findOne({ _id: study_id });
-      console.log(foundStudy);
-      if (accept === 1) foundStudy.acceptcount += 1;
-      const updatedStudy = await foundStudy.save();
-      res.study = updatedStudy;
+      if (!foundStudy) {
+        throw new Error('Not found study');
+      } else {
+        console.log(foundStudy);
+        if (accept === 1) foundStudy.acceptcount += 1;
+        const updatedStudy = await foundStudy.save();
+        res.study = updatedStudy;
+      }
     } catch (error) {
       console.log(error);
       res.status(402).json({
@@ -128,7 +140,7 @@ export const studyApi = {
   },
 
   /**스터디 정보 조회(전체)*/
-  async getStudy(req: CustomRequest, res: Response, next: NextFunction) {
+  async getStudy(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       const foundStudy = await Study.find({});
       if (!foundStudy) throw new Error('Not found');
@@ -159,7 +171,7 @@ export const studyApi = {
   },
 
   /**스터디 정보 수정*/
-  async updateStudy(req: CustomRequest, res: Response, next: NextFunction) {
+  async updateStudy(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       // 스터디장 권한 판단
       const { study_id } = req.params;
@@ -205,7 +217,7 @@ export const studyApi = {
   },
 
   /**스터디 회원 관리*/
-  async deleteUser(req: CustomRequest, res: Response, next: NextFunction) {
+  async deleteUser(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       // 스터디장 권한 판단
       const { study_id, member_id } = req.params;
@@ -231,16 +243,19 @@ export const studyApi = {
   },
 
   /**스터디 탈퇴*/
-  async leaveUser(req: CustomRequest, res: Response, next: NextFunction) {
+  async leaveUser(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       // 스터디장이면 스터디도 삭제
       const leader_id = req.user.user_id;
       const { study_id } = req.body;
       const user = await StudyRelation.findOne({ user_id: leader_id, study_id });
+      if (!user) {
+        throw new Error('Not found user');
+      }
       console.log(user);
       if (user.is_leader === true) {
         const deletedStudy = await Study.deleteOne({ _id: study_id });
-        res.Study = deletedStudy;
+        res.study = deletedStudy;
       }
 
       // 해당 스터디 아이디 관계 모두 삭제
@@ -263,7 +278,7 @@ export const studyApi = {
   },
 
   /**스터디 삭제*/
-  async deleteStudy(req: CustomRequest, res: Response, next: NextFunction) {
+  async deleteStudy(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       // 스터디장 권한 판단
       const { study_id } = req.params;
@@ -293,3 +308,6 @@ export const studyApi = {
     }
   },
 };
+
+export { CustomRequest, CustomResponse, studyApi };
+export default studyApi;

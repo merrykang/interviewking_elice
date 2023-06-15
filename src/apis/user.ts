@@ -3,24 +3,29 @@ import express from 'express';
 import bodyParser from 'body-parser';
 const app = express();
 
+import { Request, Response, NextFunction } from 'express';
 import mongoose from 'mongoose';
-const ObjectId = mongoose.Types.ObjectId;
+// const ObjectId = mongoose.Types.ObjectId;
 
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcrypt';
 
 const secretKey = process.env.SECRET_KEY;
 
-import validateEmail from '../utils/user.js';
+import validateEmail from '../utils/user';
+
+interface CustomRequest extends Request {
+  user: any;
+}
 
 // dts_insert, dts_update 필드에 삽입할 변수 값 설정
 const currentDate = new Date();
 const dateString = currentDate.toISOString().slice(0, 10).replace(/-/g, ''); // 현재 날짜를 "yyyymmdd" 형식으로 설정
 const timeString = currentDate.toTimeString().slice(0, 8).replace(/:/g, ''); // 현재 시간을 "hhmmss" 형식으로 설정
 
-export const userApi = {
+const userApi = {
   /** user API middleware 테스트 */
-  async userMiddlewareApiTest(req, res, next) {
+  async userMiddlewareApiTest(req: Request, res: Response, next: NextFunction) {
     console.log('미들웨어 실행! userApi 도착!');
     // 미들웨어 로직 처리
     console.log(req.cookies.token);
@@ -28,7 +33,7 @@ export const userApi = {
   },
 
   /** user 정보 전체 DB 조회 테스트 */
-  async getAllUserInfo(req, res, next) {
+  async getAllUserInfo(req: Request, res: Response, next: NextFunction) {
     try {
       const findAllUser = await User.find({});
 
@@ -53,7 +58,7 @@ export const userApi = {
   },
 
   /** 회원가입 */
-  async registerUser(req, res, next) {
+  async registerUser(req: Request, res: Response, next: NextFunction) {
     try {
       const { user_name, email, password, passwordCheck } = req.body;
 
@@ -127,7 +132,7 @@ export const userApi = {
   },
 
   /** 로그인 */
-  async loginUser(req, res, next) {
+  async loginUser(req: Request, res: Response, next: NextFunction) {
     try {
       const { email, password } = req.body;
 
@@ -156,7 +161,7 @@ export const userApi = {
         user_id: findUser._id, // 사용자의 MongoDB ObjectID
       };
 
-      const token = jwt.sign(payload, secretKey, { expiresIn: '3d' }); // 토큰 만료시간
+      const token = jwt.sign(payload, secretKey as jwt.Secret, { expiresIn: '3d' }); // 토큰 만료시간
 
       // JWT 토큰 쿠키에 담아주기
       res.cookie('token', token, {
@@ -188,7 +193,7 @@ export const userApi = {
   },
 
   /** 내 정보 조회 */
-  async getUserInfo(req, res) {
+  async getUserInfo(req: Request, res: Response) {
     const token = req.cookies.token;
     // console.log('미들웨어 실행 -> userApi getUserInfo 도착!');
     // console.log('내정보조회' + req.cookies.token);
@@ -201,7 +206,7 @@ export const userApi = {
       // 64861538a1783d4f1622f41c
 
       // middleware 이용 테스트
-      const { user_id } = req.user;
+      const { user_id } = (req as any).user;
       // console.log(user_id);
       // console.log('middleware 에서 불러온 decoded값' + user_id);
 
@@ -246,7 +251,7 @@ export const userApi = {
   },
 
   /** 내 정보 수정 */
-  async modifyUserInfo(req, res, next) {
+  async modifyUserInfo(req: CustomRequest, res: Response, next: NextFunction) {
     const token = req.cookies.token;
     // console.log('미들웨어 실행 -> userApi modifyUserInfo 도착!');
     // console.log('내정보수정' + req.cookies.token);
@@ -336,6 +341,9 @@ export const userApi = {
           phone_number: true,
         },
       );
+      if (!updatedUser) {
+        throw new Error('Not update');
+      }
 
       return res.status(200).json({
         resultCode: '200',
@@ -357,7 +365,7 @@ export const userApi = {
   },
 
   /** 회원탈퇴 */
-  async deleteUser(req, res, next) {
+  async deleteUser(req: CustomRequest, res: Response, next: NextFunction) {
     const token = req.cookies.token;
     // console.log('미들웨어 실행 -> userApi deleteUser 도착!');
     // console.log('회원탈퇴' + req.cookies.token);
@@ -414,7 +422,7 @@ export const userApi = {
   },
 
   /** 로그아웃 */
-  async logoutUser(req, res, next) {
+  async logoutUser(req: CustomRequest, res: Response, next: NextFunction) {
     const token = req.cookies.token;
     console.log('미들웨어 실행 -> userApi logoutUser 도착!');
     console.log('로그아웃' + req.cookies.token);
@@ -441,3 +449,6 @@ export const userApi = {
     }
   },
 };
+
+export { CustomRequest, userApi };
+export default userApi;

@@ -6,9 +6,10 @@ import moment from 'moment';
 import s3 from '../config/s3';
 
 const router = Router();
+import { Request, Response, NextFunction } from 'express';
 
 /** 파일 업로드 */
-async function fileModify(req, res, next) {
+async function fileModify(req: Request, res: Response, next: NextFunction) {
   try {
     /** 서버로 업로드 */
     const storage = multer.memoryStorage();
@@ -43,9 +44,9 @@ async function fileModify(req, res, next) {
       const response = await s3.send(command);
 
       if (response) {
-        req.file_etag = response.ETag;
-        req.file_name = req.file.originalname;
-        req.file_key = key;
+        req.body.file_etag = response.ETag;
+        req.body.file_name = req.file.originalname;
+        req.body.file_key = key;
         next();
       } else {
         res.end();

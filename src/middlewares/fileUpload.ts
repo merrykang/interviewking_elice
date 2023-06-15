@@ -8,7 +8,7 @@ import s3 from '../config/s3';
 const router = Router();
 
 /** 파일 업로드 */
-async function fileUpload(req, res, next) {
+async function fileUpload(req: any, res: any, next: any) {
   try {
     /** 서버로 업로드 */
     const storage = multer.memoryStorage();

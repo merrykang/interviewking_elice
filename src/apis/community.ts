@@ -44,7 +44,9 @@ export const communityApi = {
     try {
       const { user_id, title, content } = req.body;
       const findUser = await User.findOne({ _id: user_id }).populate('_id').exec();
-      const user_name = findUser.user_name;
+      if (!findUser) {
+        throw new Error('Not found user');
+      }
 
       const file_etag = req.body.file_etag;
       const file_name = req.body.file_name;
@@ -61,8 +63,16 @@ export const communityApi = {
 
       /** 게시글번호 생성 */
       const lastCommunityId = await getLastCommunityId();
+      if (lastCommunityId === undefined) {
+        throw new Error('Undefined id');
+      }
       const newCommunityId = lastCommunityId + 1;
 
+      // 유저 찾기
+
+      const user_name = findUser.user_name;
+
+      // 커뮤니티 글 생성
       const newContent = await Community.create({
         community_id: newCommunityId,
         user_id,
@@ -234,8 +244,6 @@ export const communityApi = {
   async postReply(req: Request, res: Response) {
     try {
       const { reply_user_id, reply_content, community_id } = req.body;
-      const findUser = await User.findOne({ _id: reply_user_id }).populate('_id').exec();
-      const reply_user_name = findUser.user_name;
 
       /** 댓글번호 순차부여 */
       async function getLastCommunityId() {
@@ -246,7 +254,17 @@ export const communityApi = {
 
       /** 댓글번호 생성 */
       const lastCommunityId = await getLastCommunityId();
+      if (lastCommunityId === undefined) {
+        throw new Error('Undefined id');
+      }
       const newCommunityId = lastCommunityId + 1;
+
+      // 유저 찾기
+      const findUser = await User.findOne({ _id: reply_user_id }).populate('_id').exec();
+      if (!findUser) {
+        throw new Error('Not found user');
+      }
+      const reply_user_name = findUser.user_name;
 
       const newContent = await CommunityReply.create({
         reply_id: newCommunityId,
@@ -346,3 +364,5 @@ export const communityApi = {
     }
   },
 };
+
+export default communityApi;

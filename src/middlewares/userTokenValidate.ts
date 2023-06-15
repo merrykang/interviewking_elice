@@ -10,7 +10,7 @@ const bcrypt = require('bcrypt');
 
 const secretKey = process.env.SECRET_KEY;
 
-const userTokenValidate = async (req, res, next) => {
+const userTokenValidate = async (req: any, res: any, next: any) => {
   // console.log('미들웨어 실행!');
 
   // const payload = {
@@ -32,7 +32,7 @@ const userTokenValidate = async (req, res, next) => {
     // 토큰이 유효한 경우
     req.user = decoded;
     next();
-  } catch (err) {
+  } catch (err: any) {
     if (err.name === 'JsonWebTokenError') {
       // 토큰이 유효하지 않은 경우
       return res.status(401).json({

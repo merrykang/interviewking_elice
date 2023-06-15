@@ -2,10 +2,12 @@ import { Router } from 'express';
 const router = Router();
 
 import communityApi from '../apis/community';
-import fileUpload from '../middlewares/fileUpload';
-import fileDownload from '../middlewares/fileDownload';
-import fileModify from '../middlewares/fileModify';
+// import fileUpload from '../middlewares/fileUpload';
+// import fileDownload from '../middlewares/fileDownload';
+// import fileModify from '../middlewares/fileModify';
 import userTokenValidate from '../middlewares/userTokenValidate';
+
+// router.use(userTokenValidate);
 
 router.get('/list', communityApi.getAllList);
 router.post('/detl', communityApi.postContent); //fileUpload
