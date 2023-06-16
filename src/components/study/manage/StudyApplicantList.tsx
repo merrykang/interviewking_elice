@@ -30,36 +30,36 @@ const StudyApplicantList = ({ studyId }: StudyApplicantListProps) => {
   // 신청 거절
   const unAccept = 2;
   const onAcceptButton = async (index: number) => {
-    const userId = studyAcceptData[index].user_id;
+    const userId = studyApplytData[index].user_id;
     await putAcceptStudy(
       String(localStorage.getItem("token")),
       studyId,
       userId,
       accept
     );
-    queryClient.invalidateQueries(["studyAcceptData"]);
+    queryClient.invalidateQueries(["studyApplytData"]);
   };
   const onDeleteButton = async (index: number) => {
-    const userId = studyAcceptData[index].user_id;
+    const userId = studyApplytData[index].user_id;
     await putAcceptStudy(
       String(localStorage.getItem("token")),
       studyId,
       userId,
       unAccept
     );
-    queryClient.invalidateQueries(["studyAcceptData"]);
+    queryClient.invalidateQueries(["studyApplytData"]);
   };
 
   const {
-    data: studyAcceptData,
+    data: studyApplytData,
     isLoading,
     isError,
-  } = useQuery(["studyAcceptData"], () =>
+  } = useQuery(["studyApplytData"], () =>
     getStudyAccept(studyId, apply).then((response) => response.data)
   );
 
-  console.log(`studyAcceptData:`, studyAcceptData);
-  const members = studyAcceptData;
+  console.log(`studyApplytData:`, studyApplytData);
+  const members = studyApplytData;
   const [userInfoModalOpen, setUserInfoModalOpen] = React.useState(false);
 
   const handleOpenUserInfoModal = () => {
