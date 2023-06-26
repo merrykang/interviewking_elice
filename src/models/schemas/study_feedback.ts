@@ -1,5 +1,5 @@
-const { Schema } = require('mongoose');
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+const { Schema } = mongoose;
 
 const StudyFeedbackSchema = new Schema(
   {
@@ -14,4 +14,4 @@ const StudyFeedbackSchema = new Schema(
   },
 );
 
-module.exports = StudyFeedbackSchema;
+export default StudyFeedbackSchema;

@@ -1,18 +1,24 @@
-const { User }  = require('../models/index');
+import { User } from '../models/index';
 
-const express = require('express');
-const bodyParser = require('body-parser');
+import express from 'express';
+import bodyParser from 'body-parser';
 const app = express();
 
-const mongoose = require('mongoose');
-const ObjectId = mongoose.Types.ObjectId;
+import mongoose from 'mongoose';
+const {
+  Types: { ObjectId },
+} = mongoose;
 
-const jwt = require('jsonwebtoken');
-const bcrypt = require('bcrypt');
+import jwt, { JwtPayload } from 'jsonwebtoken';
+import bcrypt from 'bcrypt';
 
 const secretKey = process.env.SECRET_KEY;
+import { Request, Response, NextFunction } from 'express';
+interface CustomRequest extends Request {
+  user: any;
+}
 
-const userTokenValidate = async (req, res, next) => {
+export const userTokenValidate = async (req: CustomRequest, res: Response, next: NextFunction) => {
   // console.log('미들웨어 실행!');
 
   // 쿠키값 사용 주석 처리
@@ -24,13 +30,16 @@ const userTokenValidate = async (req, res, next) => {
 
   if (!token) {
     return res.status(401).json({
-      resultCode: "401",
-      message: "토큰이 없습니다."
+      resultCode: '401',
+      message: '토큰이 없습니다.',
     });
   }
 
   try {
-    const decoded = jwt.verify(token, secretKey);
+    if (!secretKey) {
+      throw new Error('Secret key is undefined');
+    }
+    const decoded = jwt.verify(token, secretKey) as JwtPayload;
 
     // 토큰이 유효한 경우
     req.user = decoded;
@@ -58,29 +67,28 @@ const userTokenValidate = async (req, res, next) => {
     //             user_id: currentUser._id
     //         }
     //     });
-    // }    
+    // }
     next();
   } catch (err) {
-    if (err.name === 'JsonWebTokenError') {
+    if ((err as Error).name === 'JsonWebTokenError') {
       // 토큰이 유효하지 않은 경우
       return res.status(401).json({
-        resultCode: "401",
-        message: "유효하지 않은 토큰입니다."
+        resultCode: '401',
+        message: '유효하지 않은 토큰입니다.',
       });
-    } else if (err.name === 'TokenExpiredError') {
+    } else if ((err as Error).name === 'TokenExpiredError') {
       // 토큰이 만료된 경우
       return res.status(401).json({
-        resultCode: "401",
-        message: "만료된 토큰입니다."
+        resultCode: '401',
+        message: '만료된 토큰입니다.',
       });
     } else {
       // 기타 토큰 검증 실패
       return res.status(500).json({
-        resultCode: "500",
-        message: "서버 오류"
+        resultCode: '500',
+        message: '서버 오류',
       });
     }
   }
 };
-
-module.exports = userTokenValidate;
+export default userTokenValidate;

@@ -1,5 +1,5 @@
-const { Schema } = require('mongoose');
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+const { Schema } = mongoose;
 
 const StudyRelationSchema = new Schema({
   study_id: { type: mongoose.Types.ObjectId, unique: false, ref: 'Study' }, // reference
@@ -10,4 +10,4 @@ const StudyRelationSchema = new Schema({
   accept: { type: Number }, // 0: 신청 완료, 1: 신청 수락, 2: 신청 거절, 3: 신청 반려
 });
 
-module.exports = StudyRelationSchema;
+export default StudyRelationSchema;

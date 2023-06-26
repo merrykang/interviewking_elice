@@ -1,21 +1,31 @@
-const { Study } = require('../models/index');
-const { User } = require('../models/index');
-const { StudyRelation } = require('../models/index');
-const { StudyFeedback } = require('../models/index');
+import { Study } from '../models/index';
+import { User } from '../models/index';
+import { StudyRelation } from '../models/index';
+import { StudyFeedback } from '../models/index';
+import { Request, Response, NextFunction } from 'express';
+interface CustomRequest extends Request {
+  user: any;
+}
+interface CustomResponse extends Request {
+  study: any;
+  status: any;
+  study_relation: any;
+  study_feedback: any;
+}
 
-// const mongoose = require('mongoose');
-// const { ObjectId } = require('mongodb');
-
-const studyApi = {
+export const studyApi = {
   /**스터디 개설*/
-  async newStudy(req, res, next) {
+  async newStudy(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       // 스터디 개설
       const leader_id = req.user.user_id;
       console.log(req.user);
       console.log(leader_id);
+
       const leader = await User.findOne({ _id: leader_id });
+      if (leader === null) throw new Error('The leader is null');
       console.log(leader.user_name);
+
       const { study_name, title, content, start, end, deadline, headcount, chat_link, status } =
         req.body;
 
@@ -52,7 +62,7 @@ const studyApi = {
       const createdRelation = await StudyRelation.create(createRelation);
       res.study_relation = createdRelation;
     } catch (error) {
-      console.log(error.message);
+      console.log((error as Error).message);
       res.status(400).json({
         code: 400,
         message: 'wrong request',
@@ -61,12 +71,13 @@ const studyApi = {
   },
 
   /**스터디 신청*/
-  async applyStudy(req, res, next) {
+  async applyStudy(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       const member_id = req.user.user_id;
       console.log(member_id);
       if (!member_id) throw new Error('Only logged-in people can apply'); // 로그인한 사람만 신청 가능
       const member = await User.findOne({ _id: member_id });
+      if (member === null) throw new Error('The member is null');
       console.log(member);
 
       const { study_id, goal } = req.body;
@@ -91,7 +102,7 @@ const studyApi = {
   },
 
   /**스터디 신청 수락*/
-  async acceptStudy(req, res, next) {
+  async acceptStudy(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       const { member_id, study_id } = req.params;
       const leader_id = req.user.user_id;
@@ -113,6 +124,7 @@ const studyApi = {
 
       // 스터디 신청 수락 인원 1 증가
       const foundStudy = await Study.findOne({ _id: study_id });
+      if (foundStudy === null) throw new Error('The study is null');
       console.log(foundStudy);
       if (accept === 1) foundStudy.acceptcount += 1;
       const updatedStudy = await foundStudy.save();
@@ -127,7 +139,7 @@ const studyApi = {
   },
 
   /**스터디 신청 완료 or 신청 수락 명단 조회*/
-  async acceptRelation(req, res, next) {
+  async acceptRelation(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       const { study_id, accept } = req.params;
       // const leader_id = req.user.user_id;
@@ -152,7 +164,7 @@ const studyApi = {
   },
 
   /**스터디 정보 조회(전체)*/
-  async getStudy(req, res, next) {
+  async getStudy(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       const foundStudy = await Study.find({});
       if (!foundStudy) throw new Error('Not found');
@@ -167,7 +179,7 @@ const studyApi = {
   },
 
   /**스터디 정보 조회(모집 중)*/
-  async getStudyOne(req, res, next) {
+  async getStudyOne(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       const { study_id } = req.params;
       const foundStudy = await Study.findOne({ _id: study_id });
@@ -183,7 +195,7 @@ const studyApi = {
   },
 
   /**스터디 정보 수정*/
-  async updateStudy(req, res, next) {
+  async updateStudy(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       // 스터디장 권한 판단
       const { study_id } = req.params;
@@ -220,7 +232,7 @@ const studyApi = {
       const updatedStudy = await Study.updateOne({ _id: study_id }, updateInfo);
       res.status(200).json(updatedStudy);
     } catch (error) {
-      console.log("Elice Check!!!", error);
+      console.log('Elice Check!!!', error);
       res.status(402).json({
         code: 402,
         message: 'The member cannot have authorization to update.',
@@ -229,7 +241,7 @@ const studyApi = {
   },
 
   /**스터디 회원 관리*/
-  async deleteUser(req, res, next) {
+  async deleteUser(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       // 스터디장 권한 판단
       const { study_id, member_id } = req.params;
@@ -255,16 +267,17 @@ const studyApi = {
   },
 
   /**스터디 탈퇴*/
-  async leaveUser(req, res, next) {
+  async leaveUser(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       // 스터디장이면 스터디도 삭제
       const leader_id = req.user.user_id;
       const { study_id } = req.body;
       const user = await StudyRelation.findOne({ user_id: leader_id, study_id });
+      if (user === null) throw new Error('The user is null');
       console.log(user);
       if (user.is_leader === true) {
         const deletedStudy = await Study.deleteOne({ _id: study_id });
-        res.Study = deletedStudy;
+        res.study = deletedStudy;
       }
 
       // 해당 스터디 아이디 관계 모두 삭제
@@ -287,7 +300,7 @@ const studyApi = {
   },
 
   /**스터디 삭제*/
-  async deleteStudy(req, res, next) {
+  async deleteStudy(req: CustomRequest, res: CustomResponse, next: NextFunction) {
     try {
       // 스터디장 권한 판단
       const { study_id } = req.params;
@@ -318,4 +331,5 @@ const studyApi = {
   },
 };
 
-module.exports = studyApi;
+export { CustomRequest, CustomResponse };
+export default studyApi;

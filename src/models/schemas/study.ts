@@ -1,5 +1,5 @@
-const { Schema } = require('mongoose');
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
+const { Schema } = mongoose;
 
 const StudySchema = new Schema({
   // 스터디 정보
@@ -25,4 +25,4 @@ const StudySchema = new Schema({
   },
 });
 
-module.exports = StudySchema;
+export default StudySchema;
